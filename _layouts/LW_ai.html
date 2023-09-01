@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #264653;
+        }
+
+        .btn {
+            background-color: #2A9D8F;
+            border-color: #2A9D8F;
+        }
+
+        .btn:hover {
+            background-color: #E9C46A;
+            border-color: #E9C46A;
+        }
+
+        .output {
+            background-color: #E9C46A;
+            color: #264653;
+        }
+    </style>
+    <title>论文前言生成器</title>
+</head>
+
+<body>
+    <div class="container mx-auto p-4">
+        <h1 class="text-xl text-center font-bold mb-6 text-white">论文前言生成器</h1>
+        <form id="form" class="bg-white p-4 rounded text-black">
+            <div class="mb-4">
+                <label for="topic" class="block mb-2">研究主题:</label>
+                <input type="text" id="topic" name="topic" placeholder="" class="w-full px-3 py-2 border rounded">
+            </div>
+            <button type="submit" class="btn text-white font-bold py-2 px-4 rounded-full">开始创作前言</button>
+            <button type="button" class="btn text-white font-bold py-2 px-4 rounded-full">复制</button>
+        </form>
+        <div id="output" class="mt-6 output p-4 rounded break-words"></div>
+        <footer class="text-center mt-6">
+            <span class="text-white underline"><a href="default.html">Made in YYC ❤️</a></span>
+        </footer>
+    </div>
+    <script>
+        let isGenerating = false;
+        const form = document.getElementById("form");
+        const topicInput = document.getElementById("topic");
+        const output = document.getElementById("output");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const topic = document.getElementById("topic").value;
+
+            if (!topic) {
+                // 输入框为空,处理逻辑
+                topicInput.style.borderColor = "red";
+                topicInput.placeholder = "请输入研究主题";
+                return;
+            }
+
+            if (isGenerating) {
+                alert("正在生成中...");
+                return;
+            }
+
+            // 否则正常生成
+            isGenerating = true;
+
+            const loadingIcon = document.createElement("div");
+            loadingIcon.textContent = "生成中...";
+            copyBtn.after(loadingIcon);
+
+            const prompt = `为研究主题为${topic}的论文创作一篇引人入胜的前言部分。`;
+
+            console.log(prompt);
+            output.innerText = "";
+
+            const ws = new WebSocket(`wss://backend.buildpicoapps.com/ask_ai_streaming?app_id=store-nation&prompt=${encodeURIComponent(prompt)}`);
+
+            ws.addEventListener("message", (event) => {
+                console.log(event.data);
+                output.innerText = `${output.innerText}${event.data}`;
+            });
+
+            ws.addEventListener("close", (event) => {
+                console.log("Connection closed", event.code, event.reason);
+                if (event.code != 1000) {
+                    alert("出现错误，请刷新后再试一次");
+                }
+            });
+
+            ws.addEventListener("error", (error) => {
+                console.log('WebSocket error', error);
+                alert("出现错误，请刷新后再试一次");
+
+            });
+
+            ws.addEventListener("close", () => {
+
+                isGenerating = false;
+                loadingIcon.remove();
+
+            });
+
+            topicInput.addEventListener("focus", () => {
+                topicInput.style.borderColor = "";
+            });
+
+        });
+
+        const copyBtn = document.querySelector("button[type='button']");
+
+        // 移除该按钮的提交事件
+        copyBtn.removeAttribute("submit");
+
+        copyBtn.addEventListener("click", () => {
+            // 点击复制按钮时
+            if (isGenerating) {
+                alert("正在生成中,请稍后复制");
+                return;
+            }
+
+            // 获取输出元素
+            const output = document.getElementById("output");
+
+            // 获取文本内容
+            const text = output.innerText;
+
+            // 执行复制操作
+            copyText(text);
+
+        });
+
+        function copyText(text) {
+
+            // 创建临时文本框
+            const textArea = document.createElement("textarea");
+
+            // 设置值
+            textArea.value = text;
+
+            // 使其不可见
+            textArea.style.position = "absolute";
+            textArea.style.opacity = 0;
+
+            // 插入到dom树
+            document.body.appendChild(textArea);
+
+            // 选择内容  
+            textArea.select();
+
+            // 执行复制
+            document.execCommand("copy");
+
+            // 删除文本框
+            document.body.removeChild(textArea);
+
+        }
+
+    </script>
+</body>
+
+</html>
