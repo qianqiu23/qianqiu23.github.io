@@ -1,0 +1,51 @@
+/* 基本页面样式 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    font-size: 18px;
+    color: #666;
+    margin: 10px 0;
+}
+
+/* 二维码样式 */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+/* 下载链接样式 */
+/* 如果添加了下载链接，可以使用以下样式 */
+/*
+.download-link a {
+    text-decoration: none;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.download-link a:hover {
+    background-color: #0056b3;
+}
+*/
