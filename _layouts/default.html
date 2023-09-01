@@ -9,5 +9,11 @@
     {% include projects.html %}
   </section>
   {{ content }}
-  {% include footer.html %}
+  <footer class="footer">
+    <p>&copy; {{site.username}}</p>
+    <p><a href="/_includes/zizhu.html">请作者喝杯奶茶 </a> <span class="love">❤</span> <a href="/_includes/lianxi.html">联系作者</a></p>
+  </footer>
+  <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="{{ "/assets/js/sweet-scroll.min.js" | prepend: site.baseurl }}"></script>
+  <script src="{{ "/assets/js/main.js" | prepend: site.baseurl }}"></script>
 </body>
