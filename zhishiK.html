@@ -14,43 +14,47 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100 vh;
+            height: 100vh;
         }
 
         /* 容器的样式 */
         .container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            /* 修改为垂直方向排列 */
+            align-items: center;
         }
 
         /* 内部方块的样式 */
         .box {
+            width: 100%;
+            /* 使宽度占满容器 */
+
             background-color: #a2d5f2;
             /* 背景色设为珊瑚色 */
             color: #000000;
             /* 文字颜色设为黑色 */
-            width: 300 px;
+            width: 300px;
             /* 宽度 */
-            height: 100 px;
+            height: 100px;
             /* 高度 */
-            margin: 20 px;
+            margin: 20px;
             /* 边距 */
-            padding: 20 px;
+            padding: 20px;
             /* 间距 */
-            transition: all 0.5 s ease;
+            transition: all 0.5s ease;
             /* 过渡效果 */
             display: flex;
             /* 设置为Flex布局以水平排列元素 */
             align-items: center;
             /* 垂直居中对齐 */
-            border-radius: 5 px;
+            border-radius: 5px;
             /* 添加圆角 */
         }
 
         /* 鼠标悬停时方块的样式 */
         .box:hover {
-            box-shadow: 0 0 15 px rgba (0, 0, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             /* 添加阴影效果 */
             background-color: #04395e;
             /* 改变背景色为深橙色 */
