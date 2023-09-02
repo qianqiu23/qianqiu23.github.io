@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>知识库问答系统</title>
     <!-- CSS开始 -->
     <style>
@@ -10,13 +12,13 @@
             background-color: #f8faff;
         }
 
-        /* 外层容器样式，设置为Flex布局，元素间平均分布 */
+        /* 外层容器样式 */
         .container {
             display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-            flex-wrap: wrap;
-            /* 当内部元素超出容器宽度时，元素会移到下一行 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100 vh;
         }
 
         /* 内部方块的样式 */
@@ -25,27 +27,27 @@
             /* 背景色设为珊瑚色 */
             color: #000000;
             /* 文字颜色设为黑色 */
-            width: 300px;
+            width: 300 px;
             /* 宽度 */
-            height: 100px;
+            height: 100 px;
             /* 高度 */
-            margin: 20px;
+            margin: 20 px;
             /* 边距 */
-            padding: 20px;
+            padding: 20 px;
             /* 间距 */
-            transition: all 0.5s ease;
+            transition: all 0.5 s ease;
             /* 过渡效果 */
             display: flex;
             /* 设置为Flex布局以水平排列元素 */
             align-items: center;
             /* 垂直居中对齐 */
-            border-radius: 5px;
+            border-radius: 5 px;
             /* 添加圆角 */
         }
 
         /* 鼠标悬停时方块的样式 */
         .box:hover {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 15 px rgba (0, 0, 0, 0.2);
             /* 添加阴影效果 */
             background-color: #04395e;
             /* 改变背景色为深橙色 */
