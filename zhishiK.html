@@ -2,28 +2,34 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>知识库问答系统</title>
+
     <!-- CSS开始 -->
     <style>
-        /* 设定全页面的背景色 */
+        /* 設置全頁面的背景色 */
         body {
             background-color: #f8faff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100 vh;
         }
 
-        /* 外层容器样式 */
+        /* 容器的样式 */
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            /* 修改为垂直方向排列 */
             align-items: center;
-            height: 100 vh;
-            flex-wrap: wrap;
         }
 
         /* 内部方块的样式 */
         .box {
+            width: 100 %;
+            /* 使宽度占满容器 */
+
             background-color: #a2d5f2;
             /* 背景色设为珊瑚色 */
             color: #000000;
@@ -77,17 +83,22 @@
     <!-- HTML开始 -->
     <div class="container">
         <div class="box">
-            <h2><a href="https://fastgpt.run/chat/share?shareId=84nwx2ppe43kw6pn01nz4xrd">艺术概论—知识库问答</a></h2>
-            <!-- 导航元素1，文字设定为链接 -->
+            <h2>
+                <a href="https://fastgpt.run/chat/share?shareId=84nwx2ppe43kw6pn01nz4xrd">艺术概论—知识库问答</a>
+            </h2>
+            <!-- 导航元素1,文字设定为链接 -->
         </div>
 
         <div class="box">
-            <h2><a href="https://fastgpt.run/chat/share?shareId=m4r0zoi4f6ut74aas5k6o07w">舞蹈史—知识库问答</a></h2>
-            <!-- 导航元素2，文字设定为链接 -->
+            <h2>
+                <a href="https://fastgpt.run/chat/share?shareId=m4r0zoi4f6ut74aas5k6o07w">舞蹈史—知识库问答</a>
+            </h2>
+            <!-- 导航元素2,文字设定为链接 -->
         </div>
 
         <div class="box">
-            <h2><a>政治（开发中）</a></h2> <!-- 导航元素3，文字设定为链接 -->
+            <h2><a>政治(开发中)</a></h2>
+            <!-- 导航元素3,文字设定为链接 -->
         </div>
     </div>
     <!-- HTML结束 -->
