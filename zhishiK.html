@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>知识库问答系统</title>
+    <!-- CSS开始 -->
+    <style>
+        /* 设定全页面的背景色 */
+        body {
+            background-color: #f8faff;
+        }
+
+        /* 外层容器样式，设置为Flex布局，元素间平均分布 */
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            flex-wrap: wrap;
+            /* 当内部元素超出容器宽度时，元素会移到下一行 */
+        }
+
+        /* 内部方块的样式 */
+        .box {
+            background-color: #a2d5f2;
+            /* 背景色设为珊瑚色 */
+            color: #000000;
+            /* 文字颜色设为黑色 */
+            width: 300px;
+            /* 宽度 */
+            height: 100px;
+            /* 高度 */
+            margin: 20px;
+            /* 边距 */
+            padding: 20px;
+            /* 间距 */
+            transition: all 0.5s ease;
+            /* 过渡效果 */
+            display: flex;
+            /* 设置为Flex布局以水平排列元素 */
+            align-items: center;
+            /* 垂直居中对齐 */
+            border-radius: 5px;
+            /* 添加圆角 */
+        }
+
+        /* 鼠标悬停时方块的样式 */
+        .box:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            /* 添加阴影效果 */
+            background-color: #04395e;
+            /* 改变背景色为深橙色 */
+            color: white;
+            /* 改变文字颜色为白色 */
+        }
+
+        /* 链接样式 */
+        .box a {
+            color: inherit;
+            /* 继承父元素的颜色 */
+            text-decoration: none;
+            /* 去掉下划线 */
+        }
+
+        /* 鼠标悬停在链接上时链接的样式 */
+        .box a:hover {
+            color: white;
+            /* 改变颜色为白色 */
+        }
+    </style>
+    <!-- CSS结束 -->
+</head>
+
+<body>
+    <!-- HTML开始 -->
+    <div class="container">
+        <div class="box">
+            <h2><a href="https://fastgpt.run/chat/share?shareId=84nwx2ppe43kw6pn01nz4xrd">艺术概论—知识库问答</a></h2>
+            <!-- 导航元素1，文字设定为链接 -->
+        </div>
+
+        <div class="box">
+            <h2><a href="https://fastgpt.run/chat/share?shareId=m4r0zoi4f6ut74aas5k6o07w">舞蹈史—知识库问答</a></h2>
+            <!-- 导航元素2，文字设定为链接 -->
+        </div>
+
+        <div class="box">
+            <h2><a>政治（开发中）</a></h2> <!-- 导航元素3，文字设定为链接 -->
+        </div>
+    </div>
+    <!-- HTML结束 -->
+</body>
+
+</html>
