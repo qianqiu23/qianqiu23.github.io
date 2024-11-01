@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直播数据记录系统</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>直播数据记录系统</h1>
+        <canvas id="liveChart" style="position: relative;"></canvas>
+        <div class="controls">
+            <button id="addDataBtn">添加新数据</button>
+        </div>
+    </div>
+
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span class="closeBtn">&times;</span>
+            <h2 id="modalTitle">添加新直播数据</h2>
+            <form id="dataForm">
+                <div class="form-group">
+                    <label for="session">场次:</label>
+                    <input type="number" id="session" required>
+                </div>
+                <div class="form-group">
+                    <label for="exposure">曝光:</label>
+                    <input type="number" id="exposure" required>
+                </div>
+                <div class="form-group">
+                    <label for="viewers">观看人数:</label>
+                    <input type="number" id="viewers" required>
+                </div>
+                <div class="form-group">
+                    <label for="sales">成交金额:</label>
+                    <input type="number" id="sales" required>
+                </div>
+                <div class="form-group">
+                    <label for="orders">订单量:</label>
+                    <input type="number" id="orders" required>
+                </div>
+                <div class="form-group">
+                    <label for="promote">推广费:</label>
+                    <input type="number" id="promote" required>
+                </div>
+                <div class="form-group">
+                    <button id="saveDataBtn" type="button">保存数据</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="closeBtn">&times;</span>
+            <h2>请输入密码</h2>
+            <input type="password" id="password" required>
+            <button id="submitPasswordBtn">确认</button>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
