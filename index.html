@@ -1,73 +1,217 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>直播数据记录系统</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script src="https://apis.google.com/js/api.js?onload=handleClientLoad"></script>
+    <title>牡丹位置数据表</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 100%;
+            table-layout: fixed;
+            min-width: fit-content;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.1vw; /* 使用相对单位，随窗口缩放 */
+            text-align: center;
+            min-width: 5vw; /* 使用相对单位，随窗口缩放 */
+            max-width: 15vw; /* 使用相对单位，随窗口缩放 */
+            word-break: break-word;
+            transition: background-color 0.2s;
+            font-size: 0.6vw; /* 使用相对单位，随窗口缩放 */
+            line-height: 1.2vw; /* 使用相对单位，随窗口缩放 */
+        }
+        /* 非空单元格样式 */
+        td:not(:empty):not([data-content="-"]) {
+            background-color: #fff9e6;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        /* 添加高亮样式 */
+        .highlight-cell {
+            background-color: #008cff !important;
+            color: white !important;
+            font-weight: bold !important;
+            border: 2px solid #0066cc !important;
+            z-index: 2;
+            position: relative;
+        }
+        .highlight-row, .highlight-col {
+            background-color: rgba(222, 239, 252, 0.7) !important;  /* 使用rgba设置半透明 */
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* 确保高亮单元格的样式优先级最高 */
+        table tr td.highlight-cell {
+            background-color: #008cff !important;
+            color: white !important;
+        }
+        
+        /* 搜索区域样式 */
+        .search-container {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .search-container input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .search-container button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>直播数据记录系统</h1>
-        <canvas id="liveChart" style="position: relative;"></canvas>
-        <div class="controls">
-            <button id="addDataBtn">添加新数据</button>
-        </div>
+    <div id="table-container" style="width: 100%; overflow: auto"></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="输入牡丹品种名称或编号">
+        <button onclick="searchPeony()">查找</button>
+        <div id="peonyInfo" style="margin-top: 10px; font-size: 16px; color: #333;"></div>
     </div>
 
-    <div id="dataModal" class="modal">
-        <div class="modal-content">
-            <span class="closeBtn">&times;</span>
-            <h2 id="modalTitle">添加新直播数据</h2>
-            <form id="dataForm">
-                <div class="form-group">
-                    <label for="session">场次:</label>
-                    <input type="number" id="session" required>
-                </div>
-                <div class="form-group">
-                    <label for="exposure">曝光:</label>
-                    <input type="number" id="exposure" required>
-                </div>
-                <div class="form-group">
-                    <label for="viewers">观看人数:</label>
-                    <input type="number" id="viewers" required>
-                </div>
-                <div class="form-group">
-                    <label for="sales">成交金额:</label>
-                    <input type="number" id="sales" required>
-                </div>
-                <div class="form-group">
-                    <label for="orders">订单量:</label>
-                    <input type="number" id="orders" required>
-                </div>
-                <div class="form-group">
-                    <label for="promote">推广费:</label>
-                    <input type="number" id="promote" required>
-                </div>
-                <div class="form-group">
-                    <button id="saveDataBtn" type="button">保存数据</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <script>
+        let peonyData = {}; // 存储牡丹编号和品种名称的对应关系
+        let peonyPrices = {}; // 存储牡丹编号和价格的对应关系
+        let peonyNames = {}; // 存储牡丹编号和名称的对应关系
+        
+        // 加载牡丹数据
+        fetch('盆栽定价编号数量.csv')
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                const decoder = new TextDecoder('gbk');
+                const data = decoder.decode(buffer);
+                const rows = data.split('\n');
+                rows.forEach(row => {
+                    const [id, name, price] = row.split(',');
+                    if (id && name) {
+                        const trimmedId = id.trim();
+                        const trimmedName = name.trim();
+                        const trimmedPrice = price ? price.trim() : '';
+                        
+                        // 建立各种映射关系
+                        peonyData[trimmedId] = trimmedId;  // 编号映射到自身
+                        peonyData[trimmedName] = trimmedId;  // 名称映射到编号
+                        peonyPrices[trimmedId] = trimmedPrice;  // 存储价格
+                        peonyNames[trimmedId] = trimmedName;  // 存储名称
+                    }
+                });
+            })
+            .catch(error => console.error('牡丹数据加载失败:', error));
 
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <span class="closeBtn">&times;</span>
-            <h2>请输入密码</h2>
-            <input type="password" id="password" required>
-            <button id="submitPasswordBtn">确认</button>
-        </div>
-    </div>
+        function searchPeony() {
+            // 清除之前的高亮和信息显示
+            document.querySelectorAll('.highlight-cell, .highlight-row, .highlight-col')
+                .forEach(el => el.classList.remove('highlight-cell', 'highlight-row', 'highlight-col'));
+            document.getElementById('peonyInfo').textContent = '';
+            
+            const searchValue = document.getElementById('searchInput').value.trim();
+            
+            // 如果输入的是名称，获取对应的编号；如果是编号，直接使用
+            let searchId = searchValue;
+            if (peonyData[searchValue]) {  // 如果是名称或编号能找到对应值
+                searchId = peonyData[searchValue];  // 获取对应的编号
+                
+                // 显示品种信息
+                const name = peonyNames[searchId];
+                const price = peonyPrices[searchId];
+                if (name && price) {
+                    document.getElementById('peonyInfo').textContent = `${name}：${price}`;
+                }
+            }
+            
+            // 遍历表格查找匹配的单元格
+            const table = document.querySelector('table');
+            let found = false;
+            
+            table.querySelectorAll('tr').forEach((row, rowIndex) => {
+                row.querySelectorAll('td').forEach((cell, colIndex) => {
+                    if (cell.textContent.trim() === searchId) {
+                        // 高亮匹配的单元格
+                        cell.classList.add('highlight-cell');
+                        
+                        // 高亮整行
+                        row.querySelectorAll('td, th').forEach(el => {
+                            el.classList.add('highlight-row');
+                        });
+                        
+                        // 高亮整列
+                        table.querySelectorAll(`tr td:nth-child(${colIndex + 2})`).forEach(el => {
+                            el.classList.add('highlight-col');
+                        });
+                        table.querySelector(`tr:first-child th:nth-child(${colIndex + 2})`).classList.add('highlight-col');
+                        
+                        found = true;
+                    }
+                });
+            });
+            
+            if (!found) {
+                alert('未找到匹配的牡丹！');
+            }
+        }
 
-    <div id="tooltip" class="tooltip"></div>
+        // CSV文件加载处理
+        fetch('data.csv')
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                const decoder = new TextDecoder('gbk');
+                const data = decoder.decode(buffer);
+                const rows = data.split('\n').slice(0, 14);
+                const table = document.createElement('table');
+                
+                // 创建列头（A-BD）
+                const headerRow = document.createElement('tr');
+                headerRow.innerHTML = '<th></th>'; // A1单元格留空
+                for(let col=1; col<=56; col++) {  // 修改为56列
+                    const th = document.createElement('th');
+                    th.textContent = String.fromCharCode(64 + col);
+                    headerRow.appendChild(th);
+                }
+                table.appendChild(headerRow);
 
-    <script src="script.js"></script>
+                // 处理数据行
+                rows.forEach((row, rowIndex) => {
+                    const tr = document.createElement('tr');
+                    const cells = row.split(',').slice(0, 57);  // 修改为57（包括第一列的序号）
+                    
+                    // 添加行号
+                    const th = document.createElement('th');
+                    th.textContent = rowIndex + 1;
+                    tr.appendChild(th);
+
+                    // 填充数据单元格
+                    cells.slice(1).forEach(cell => {
+                        const td = document.createElement('td');
+                        const content = cell.trim() || '-';
+                        td.textContent = content;
+                        if (content === '-') {
+                            td.setAttribute('data-content', '-');
+                        }
+                        tr.appendChild(td);
+                    });
+
+                    table.appendChild(tr);
+                });
+
+                document.getElementById('table-container').appendChild(table);
+            })
+            .catch(error => console.error('文件加载失败:', error));
+    </script>
 </body>
-
 </html>
