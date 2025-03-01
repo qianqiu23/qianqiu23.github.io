@@ -57,6 +57,7 @@
         .search-container {
             margin: 20px auto;
             text-align: center;
+            position: relative;
         }
         .search-container input {
             padding: 8px;
@@ -75,12 +76,37 @@
         .search-container button:hover {
             background-color: #45a049;
         }
+        /* 自定义下拉菜单样式 */
+        .dropdown-menu {
+            position: absolute;
+            left: 48%;
+            transform: translateX(-110px);
+            top: 40px;
+            width: 200px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .dropdown-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .dropdown-item:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
     <div id="table-container" style="width: 100%; overflow: auto"></div>
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="输入牡丹品种名称或编号">
+        <div id="dropdown" class="dropdown-menu"></div>
         <button onclick="searchPeony()">查找</button>
         <div id="peonyInfo" style="margin-top: 10px; font-size: 16px; color: #333;"></div>
     </div>
@@ -89,6 +115,7 @@
         let peonyData = {}; // 存储牡丹编号和品种名称的对应关系
         let peonyPrices = {}; // 存储牡丹编号和价格的对应关系
         let peonyNames = {}; // 存储牡丹编号和名称的对应关系
+        let allOptions = []; // 存储所有可能的选项
         
         // 加载牡丹数据
         fetch('盆栽定价编号数量.csv')
@@ -109,12 +136,65 @@
                         peonyData[trimmedName] = trimmedId;  // 名称映射到编号
                         peonyPrices[trimmedId] = trimmedPrice;  // 存储价格
                         peonyNames[trimmedId] = trimmedName;  // 存储名称
+                        
+                        // 添加到所有选项中
+                        allOptions.push(trimmedId);
+                        allOptions.push(trimmedName);
                     }
                 });
+                
+                // 初始化下拉列表
+                updateDatalist('');
             })
             .catch(error => console.error('牡丹数据加载失败:', error));
+            
+        // 更新下拉列表
+        function updateDatalist(input) {
+            const dropdown = document.getElementById('dropdown');
+            dropdown.innerHTML = '';
+            
+            // 如果输入为空或看起来是编号（纯数字），不显示下拉列表
+            if (!input.trim() || /^\d+$/.test(input.trim())) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            // 筛选匹配的名称选项（不包括编号）
+            const matches = allOptions.filter(option => 
+                // 确保不是纯数字（编号）且包含输入内容
+                !(/^\d+$/.test(option)) && option.toLowerCase().includes(input.toLowerCase())
+            );
+            
+            // 如果没有匹配项，隐藏下拉列表
+            if (matches.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            // 只显示前5个匹配项
+            const topMatches = matches.slice(0, 5);
+            
+            // 添加到下拉列表
+            topMatches.forEach(match => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = match;
+                item.addEventListener('click', function() {
+                    document.getElementById('searchInput').value = match;
+                    dropdown.style.display = 'none';
+                    searchPeony();
+                });
+                dropdown.appendChild(item);
+            });
+            
+            // 显示下拉列表
+            dropdown.style.display = 'block';
+        }
 
         function searchPeony() {
+            // 隐藏下拉菜单
+            document.getElementById('dropdown').style.display = 'none';
+            
             // 清除之前的高亮和信息显示
             document.querySelectorAll('.highlight-cell, .highlight-row, .highlight-col')
                 .forEach(el => el.classList.remove('highlight-cell', 'highlight-row', 'highlight-col'));
@@ -165,6 +245,26 @@
                 alert('未找到匹配的牡丹！');
             }
         }
+
+        // 添加输入事件监听，实时更新下拉列表
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            updateDatalist(e.target.value);
+        });
+        
+        // 添加回车键事件监听
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPeony();
+                e.preventDefault();
+            }
+        });
+        
+        // 点击页面其他位置时隐藏下拉菜单
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'searchInput' && e.target.className !== 'dropdown-item') {
+                document.getElementById('dropdown').style.display = 'none';
+            }
+        });
 
         // CSV文件加载处理
         fetch('data.csv')
