@@ -278,7 +278,7 @@
                 // 创建列头（A-BD）
                 const headerRow = document.createElement('tr');
                 headerRow.innerHTML = '<th></th>'; // A1单元格留空
-                for(let col=1; col<=56; col++) {  // 修改为56列
+                for(let col=1; col<=51; col++) {  // 修改为56列
                     const th = document.createElement('th');
                     th.textContent = String.fromCharCode(64 + col);
                     headerRow.appendChild(th);
@@ -288,7 +288,7 @@
                 // 处理数据行
                 rows.forEach((row, rowIndex) => {
                     const tr = document.createElement('tr');
-                    const cells = row.split(',').slice(0, 57);  // 修改为57（包括第一列的序号）
+                    const cells = row.split(',').slice(0, 52);  // 修改为57（包括第一列的序号）
                     
                     // 添加行号
                     const th = document.createElement('th');
